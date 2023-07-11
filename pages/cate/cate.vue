@@ -1,34 +1,37 @@
 <template>
-  <view class="scroll-view-container">
-    <scroll-view class="lt-view-scroll" scroll-y style="height: 100vh">
-      <view
-        class="lt-view-scroll-item"
-        :class="{ active: index == active }"
-        v-for="(item, index) in cateList"
-        :key="item.id"
-        @click="handerActive(index)">
-        {{ item.cat_name }}
-      </view>
-    </scroll-view>
-    <scroll-view
-      class="rt-view-scroll"
-      scroll-y
-      style="height: 100vh"
-      :scroll-top="scrollTop">
-      <view v-for="item in cateLevel2" :key="item.cat_id">
-        <view class="cate-lv2-title">/ {{ item.cat_name }} /</view>
-        <view class="cate-lv2-box">
-          <view
-            class="cate-lv2-item"
-            v-for="level3 in item.children"
-            :key="level3.cat_id"
-            @click="goToGoodsList(level3)">
-            <image :src="level3.cat_icon" />
-            <text>{{ level3.cat_name }}</text>
+  <view>
+    <my-search @click="handerSearch"></my-search>
+    <view class="scroll-view-container">
+      <scroll-view class="lt-view-scroll" scroll-y style="height: 100vh">
+        <view
+          class="lt-view-scroll-item"
+          :class="{ active: index == active }"
+          v-for="(item, index) in cateList"
+          :key="item.id"
+          @click="handerActive(index)">
+          {{ item.cat_name }}
+        </view>
+      </scroll-view>
+      <scroll-view
+        class="rt-view-scroll"
+        scroll-y
+        style="height: 100vh"
+        :scroll-top="scrollTop">
+        <view v-for="item in cateLevel2" :key="item.cat_id">
+          <view class="cate-lv2-title">/ {{ item.cat_name }} /</view>
+          <view class="cate-lv2-box">
+            <view
+              class="cate-lv2-item"
+              v-for="level3 in item.children"
+              :key="level3.cat_id"
+              @click="goToGoodsList(level3)">
+              <image :src="level3.cat_icon" />
+              <text>{{ level3.cat_name }}</text>
+            </view>
           </view>
         </view>
-      </view>
-    </scroll-view>
+      </scroll-view>
+    </view>
   </view>
 </template>
 
@@ -62,6 +65,11 @@ export default {
     goToGoodsList(item) {
       uni.navigateTo({
         url: '/subpkg/goods_list/goods_list?cid=' + item.cat_id
+      })
+    },
+    handerSearch() {
+      uni.navigateTo({
+        url: '/subpkg/search/search'
       })
     }
   }
