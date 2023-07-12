@@ -70,7 +70,7 @@ export default {
         })
       } else {
         uni.navigateTo({
-          url: '/subpkg/goods_list/goods_list?cid=' + item
+          url: '/subpkg/goods_list/goods_list?query=' + item
         })
       }
     },

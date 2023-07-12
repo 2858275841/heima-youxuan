@@ -27,7 +27,9 @@
                 },
                 {
                     "path": "goods_list/goods_list",
-                    "style": {}
+                    "style": {
+                        "enablePullDownRefresh": true
+                    }
                 },
                 {
                     "path": "search/search",

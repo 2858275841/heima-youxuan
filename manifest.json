@@ -58,7 +58,7 @@
             "minified" : true
         },
         "usingComponents" : true,
-        "lazyCodeLoading": "requiredComponents"
+        "lazyCodeLoading" : "requiredComponents"
     },
     "vueVersion" : "2"
 }
