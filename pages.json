@@ -28,7 +28,7 @@
                 {
                     "path": "goods_list/goods_list",
                     "style": {
-                        "enablePullDownRefresh": true
+                        "enablePullDownRefresh":true
                     }
                 },
                 {

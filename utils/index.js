@@ -17,4 +17,4 @@ uni.$showMsg = function (title = '数据加载失败！', duration = 1500) {
     icon: 'none'
   })
 }
-export default $http
+export default uni

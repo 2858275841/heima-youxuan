@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -46,14 +48,14 @@ export default {
         {
           icon: 'shop',
           text: '店铺',
-          info: 2,
+          info: 0,
           infoBackgroundColor: '#007aff',
           infoColor: '#f5f5f5'
         },
         {
           icon: 'cart',
           text: '购物车',
-          info: 2
+          info: 0
         }
       ],
       buttonGroup: [
@@ -70,11 +72,21 @@ export default {
       ]
     }
   },
+  watch: {
+    total: {
+      handler(newVal) {
+        const res = this.options.find(item => item.text === '购物车')
+        res ? (res.info = newVal) : ''
+      },
+      immediate: true
+    }
+  },
   onLoad(options) {
     this.goods_id = options.goods_id
     this.getGoodsDetailList()
   },
   methods: {
+    ...mapMutations('m_cart', ['addCart']),
     async getGoodsDetailList() {
       const { data: res } = await uni.$http.get('/api/public/v1/goods/detail', {
         goods_id: this.goods_id
@@ -92,8 +104,28 @@ export default {
       })
     },
     onClick(e) {
-      if (e.content.text === '购物车') uni.switchTab({ url: '/pages/cart/cart' })
+      if (e.content.text === '购物车')
+        uni.switchTab({ url: '/pages/cart/cart' })
+    },
+    buttonClick(e) {
+      if (e.content.text === '加入购物车') {
+        const { goods_price, goods_id, goods_big_logo, goods_name } =
+          this.goodsDetailList
+        const goods = {
+          goods_id,
+          goods_name,
+          goods_price,
+          goods_count: 1,
+          goods_big_logo,
+          goods_state: true
+        }
+        this.addCart(goods)
+      }
     }
+  },
+  computed: {
+    ...mapState('m_cart', ['cart']),
+    ...mapGetters('m_cart', ['total'])
   }
 }
 </script>
