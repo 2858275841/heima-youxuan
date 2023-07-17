@@ -10,7 +10,7 @@
           <text style="color: #c00000">{{ cartSum }}.00</text>
         </text>
         <view class="settle-button">
-          <button>结算({{ isCheckCart }})</button>
+          <button @click="settlement">结算({{ isCheckCart }})</button>
         </view>
       </view>
     </view>
@@ -22,16 +22,58 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   data() {
-    return {}
+    return {
+      // 倒计时的秒数
+      seconds: 3,
+      // 定时器的 Id
+      timer: null
+    }
   },
   computed: {
     ...mapState('m_cart', ['cart']),
+    ...mapState('m_address', ['token']),
     ...mapGetters('m_cart', ['cartSum', 'isAllCheck', 'isCheckCart'])
   },
   methods: {
     ...mapMutations('m_cart', ['allCheck']),
+    ...mapMutations('m_address', ['updateRedirectInfo']),
     handerAllCheck() {
       this.allCheck()
+    },
+    settlement() {
+      if (!this.isAllCheck) return uni.$showMsg('请选择商品')
+      if (!uni.getStorageSync('address')) return uni.$showMsg('请选择收货地址')
+      if (!this.token) return this.delayNavigate()
+    },
+    showTips(n) {
+      uni.showToast({
+        title: '请登录后再结算！' + n + ' 秒后自动跳转到登录页',
+        icon: 'none',
+        mask: true,
+        duration: 1500
+      })
+    },
+    delayNavigate() {
+      this.seconds = 3
+
+      this.showTips(this.seconds)
+      this.timer = setInterval(() => {
+        this.seconds--
+        if (this.seconds <= 0) {
+          clearInterval(this.timer)
+          uni.switchTab({
+            url: '/pages/my/my',
+            success: () => {
+              this.updateRedirectInfo({
+                openType: 'switchTab',
+                from: '/pages/cart/cart'
+              })
+            }
+          })
+          return
+        }
+        this.showTips(this.seconds)
+      }, 1000)
     }
   }
 }
@@ -52,7 +94,7 @@ export default {
     align-items: center;
     height: 100%;
 
-    radio{
+    radio {
       margin-left: 10rpx;
     }
 
